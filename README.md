@@ -13,6 +13,12 @@
   <img src="https://img.shields.io/badge/License-MIT-22C55E?style=for-the-badge" alt="MIT License">
 </p>
 
+<p align="center">
+  <a href="https://github.com/utcudev/Fast-Youtube-Downloader/releases/latest"><img src="https://img.shields.io/github/v/release/utcudev/Fast-Youtube-Downloader?style=flat-square&color=22C55E" alt="Release"></a>
+  <a href="https://github.com/utcudev/Fast-Youtube-Downloader/actions/workflows/lint.yml"><img src="https://img.shields.io/github/actions/workflow/status/utcudev/Fast-Youtube-Downloader/lint.yml?style=flat-square&label=lint" alt="Lint"></a>
+  <img src="https://img.shields.io/github/downloads/utcudev/Fast-Youtube-Downloader/total?style=flat-square&color=blue" alt="Downloads">
+</p>
+
 ---
 
 ## Ne yapar

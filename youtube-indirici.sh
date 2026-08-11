@@ -105,10 +105,22 @@ fi
 
 # --- ffmpeg (yalnizca MP3 icin) ---------------------------------------------
 
-if [ "$FORMAT" = "1" ] && ! command -v ffmpeg >/dev/null 2>&1; then
+if command -v ffmpeg >/dev/null 2>&1; then
+    HAS_FFMPEG=1
+else
+    HAS_FFMPEG=0
+fi
+
+if [ "$FORMAT" = "1" ] && [ "$HAS_FFMPEG" = "0" ]; then
     say "$C_RED" "MP3'e donusturmek icin ffmpeg gerekli ama kurulu degil."
     say "$C_YELLOW" "Kurmak icin:  $(install_hint ffmpeg)"
     exit 1
+fi
+
+if [ "$FORMAT" = "2" ] && [ "$HAS_FFMPEG" = "0" ]; then
+    say "$C_YELLOW" "ffmpeg bulunamadi. Video ve ses akislari birlestirilemeyecegi icin"
+    say "$C_YELLOW" "tek parca halindeki en iyi MP4 indirilecek (kalite biraz dusuk olabilir)."
+    say "$C_YELLOW" "Tam kalite icin:  $(install_hint ffmpeg)"
 fi
 
 # --- Indirme dongusu --------------------------------------------------------
@@ -148,8 +160,11 @@ while true; do
 
     if [ "$FORMAT" = "1" ]; then
         ARGS+=( -x --audio-format mp3 --audio-quality 0 )
-    else
+    elif [ "$HAS_FFMPEG" = "1" ]; then
         ARGS+=( -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best" )
+    else
+        # Birlestirici yok - tek dosyalik formatlarla yetin
+        ARGS+=( -f "best[ext=mp4]/best" )
     fi
 
     if "$YTDLP" "${ARGS[@]}"; then

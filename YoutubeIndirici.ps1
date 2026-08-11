@@ -70,13 +70,18 @@ if (-not (Test-Path $ytDlpPath)) {
 
 $ffmpegPath = Join-Path $scriptPath "ffmpeg.exe"
 $ffmpegReady = $true
+$hasFfmpeg = $false
 
-if ($Format -eq "1" -and -not (Test-Path $ffmpegPath)) {
-    if (Get-Command "ffmpeg" -ErrorAction SilentlyContinue) {
-        # Sistemde zaten kurulu, yt-dlp PATH uzerinden bulur
-        $ffmpegPath = $null
-    } else {
-        Write-Host "MP3'e donusturmek icin FFmpeg indiriliyor (sadece ilk seferde, ~130 MB)..." -ForegroundColor Yellow
+if (Test-Path $ffmpegPath) {
+    $hasFfmpeg = $true
+} elseif (Get-Command "ffmpeg" -ErrorAction SilentlyContinue) {
+    # Sistemde zaten kurulu, yt-dlp PATH uzerinden bulur
+    $ffmpegPath = $null
+    $hasFfmpeg = $true
+}
+
+if ($Format -eq "1" -and -not $hasFfmpeg) {
+    Write-Host "MP3'e donusturmek icin FFmpeg indiriliyor (sadece ilk seferde, ~130 MB)..." -ForegroundColor Yellow
         $ffmpegZip = Join-Path $scriptPath "ffmpeg.zip"
         $ffmpegTmp = Join-Path $scriptPath "ffmpeg_extracted"
         try {
@@ -91,6 +96,7 @@ if ($Format -eq "1" -and -not (Test-Path $ffmpegPath)) {
             if (-not $extracted) { throw "Arsivde ffmpeg.exe bulunamadi." }
 
             Move-Item -Path $extracted.FullName -Destination $ffmpegPath -Force
+            $hasFfmpeg = $true
         } catch {
             Write-Host "FFmpeg indirilemedi: $($_.Exception.Message)" -ForegroundColor Red
             Write-Host "MP3 donusumu yapilamaz. MP4 secerek devam edebilir veya" -ForegroundColor Yellow
@@ -100,12 +106,16 @@ if ($Format -eq "1" -and -not (Test-Path $ffmpegPath)) {
             if (Test-Path $ffmpegZip) { Remove-Item $ffmpegZip -Force -ErrorAction SilentlyContinue }
             if (Test-Path $ffmpegTmp) { Remove-Item $ffmpegTmp -Recurse -Force -ErrorAction SilentlyContinue }
         }
-    }
 }
 
 if ($Format -eq "1" -and -not $ffmpegReady) {
     Read-Host "Cikmak icin Enter"
     exit 1
+}
+
+if ($Format -eq "2" -and -not $hasFfmpeg) {
+    Write-Host "`nFFmpeg bulunamadi. Video ve ses akislari birlestirilemeyecegi icin" -ForegroundColor Yellow
+    Write-Host "tek parca halindeki en iyi MP4 indirilecek (kalite biraz dusuk olabilir)." -ForegroundColor Yellow
 }
 
 # --- Indirme dongusu --------------------------------------------------------
@@ -144,8 +154,11 @@ while ($true) {
 
     if ($Format -eq "1") {
         $argsList += @("-x", "--audio-format", "mp3", "--audio-quality", "0")
-    } else {
+    } elseif ($hasFfmpeg) {
         $argsList += @("-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best")
+    } else {
+        # Birlestirici yok - tek dosyalik formatlarla yetin
+        $argsList += @("-f", "best[ext=mp4]/best")
     }
 
     if ($ffmpegPath -and (Test-Path $ffmpegPath)) {
