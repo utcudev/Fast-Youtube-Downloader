@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Youtube MP3/MP4 Indirici - Linux / macOS surumu
+# Youtube MP3/MP4 Indirici - Linux surumu
 # utcudev tarafindan hazirlanmistir - github.com/utcudev
 #
 
@@ -37,7 +37,6 @@ install_hint() {
     elif command -v pacman >/dev/null 2>&1; then echo "sudo pacman -S $pkg"
     elif command -v zypper >/dev/null 2>&1; then echo "sudo zypper install $pkg"
     elif command -v apk    >/dev/null 2>&1; then echo "sudo apk add $pkg"
-    elif command -v brew   >/dev/null 2>&1; then echo "brew install $pkg"
     else echo "paket yoneticinizle '$pkg' kurun"
     fi
 }
@@ -80,17 +79,11 @@ if command -v yt-dlp >/dev/null 2>&1; then
 elif [ -x "$SCRIPT_DIR/yt-dlp" ]; then
     YTDLP="$SCRIPT_DIR/yt-dlp"
 else
-    case "$(uname -s)" in
-        Darwin) ASSET="yt-dlp_macos" ;;
-        Linux)
-            case "$(uname -m)" in
-                x86_64|amd64)  ASSET="yt-dlp_linux" ;;
-                aarch64|arm64) ASSET="yt-dlp_linux_aarch64" ;;
-                armv7l)        ASSET="yt-dlp_linux_armv7l" ;;
-                *) fail "Desteklenmeyen mimari: $(uname -m). $(install_hint yt-dlp)" ;;
-            esac
-            ;;
-        *) fail "Desteklenmeyen sistem: $(uname -s)" ;;
+    case "$(uname -m)" in
+        x86_64|amd64)  ASSET="yt-dlp_linux" ;;
+        aarch64|arm64) ASSET="yt-dlp_linux_aarch64" ;;
+        armv7l)        ASSET="yt-dlp_linux_armv7l" ;;
+        *) fail "Desteklenmeyen mimari: $(uname -m). Alternatif: $(install_hint yt-dlp)" ;;
     esac
 
     URL="https://github.com/yt-dlp/yt-dlp/releases/latest/download/$ASSET"

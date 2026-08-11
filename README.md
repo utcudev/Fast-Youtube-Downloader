@@ -27,17 +27,20 @@
 
 ---
 
-## Kullanım
+## Kurulum
+
+Sisteminin paketini [**Releases**](https://github.com/utcudev/Fast-Youtube-Downloader/releases/latest) sayfasından indir.
 
 ### Windows
 
-`YoutubeIndirici.bat` dosyasına çift tıkla. Hepsi bu.
+`Fast-Youtube-Downloader-windows.zip` dosyasını çıkar, `YoutubeIndirici.bat` dosyasına çift tıkla. Hepsi bu.
 
-### Linux / macOS
+### Linux
+
+Tek satır:
 
 ```bash
-chmod +x youtube-indirici.sh
-./youtube-indirici.sh
+curl -fsSL https://raw.githubusercontent.com/utcudev/Fast-Youtube-Downloader/main/youtube-indirici.sh -o youtube-indirici.sh && chmod +x youtube-indirici.sh && ./youtube-indirici.sh
 ```
 
 ### Sonrası ikisinde de aynı
@@ -84,13 +87,13 @@ Sonraki çalıştırmalarda bu adım atlanır.
 
 **Windows** — Windows 10/11 ve PowerShell 5.1 (sistemle birlikte gelir). `.bat` dosyası betiği `-ExecutionPolicy Bypass` ile çalıştırır, ayrı izin ayarı gerekmez.
 
-**Linux / macOS** — bash, ve `curl` ya da `wget`. MP3 indirmek için `ffmpeg` sistemde kurulu olmalı:
+**Linux** — bash, ve `curl` ya da `wget`. MP3 indirmek için `ffmpeg` kurulu olmalı:
 
 ```bash
 sudo apt install ffmpeg
 ```
 
-Betik hangi paket yöneticisini kullandığını algılar ve doğru komutu söyler (apt / dnf / pacman / zypper / apk / brew). yt-dlp kurulu değilse mimarine uygun ikiliyi kendisi indirir — x86_64, aarch64 ve armv7l destekli.
+Betik hangi paket yöneticisini kullandığını algılar ve doğru komutu söyler (apt / dnf / pacman / zypper / apk). yt-dlp kurulu değilse mimarine uygun ikiliyi kendisi indirir — x86_64, aarch64, armv7l.
 
 ---
 
