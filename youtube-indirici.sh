@@ -82,7 +82,14 @@ else
     case "$(uname -m)" in
         x86_64|amd64)  ASSET="yt-dlp_linux" ;;
         aarch64|arm64) ASSET="yt-dlp_linux_aarch64" ;;
-        armv7l)        ASSET="yt-dlp_linux_armv7l" ;;
+        armv7l|armv6l|arm)
+            # 32-bit ARM icin bagimsiz ikili yayinlanmiyor;
+            # python3 gerektiren tasinabilir surumu kullaniyoruz.
+            if ! command -v python3 >/dev/null 2>&1; then
+                fail "32-bit ARM icin python3 gerekli. Kurun: $(install_hint python3)"
+            fi
+            ASSET="yt-dlp"
+            ;;
         *) fail "Desteklenmeyen mimari: $(uname -m). Alternatif: $(install_hint yt-dlp)" ;;
     esac
 

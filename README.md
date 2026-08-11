@@ -99,7 +99,13 @@ Sonraki çalıştırmalarda bu adım atlanır.
 sudo apt install ffmpeg
 ```
 
-Betik hangi paket yöneticisini kullandığını algılar ve doğru komutu söyler (apt / dnf / pacman / zypper / apk). yt-dlp kurulu değilse mimarine uygun ikiliyi kendisi indirir — x86_64, aarch64, armv7l.
+Betik hangi paket yöneticisini kullandığını algılar ve doğru komutu söyler (apt / dnf / pacman / zypper / apk). yt-dlp kurulu değilse mimarine uygun sürümü kendisi indirir:
+
+| Mimari | Ne iner | Ek gereksinim |
+|---|---|---|
+| x86_64 | `yt-dlp_linux` | — |
+| aarch64 / arm64 | `yt-dlp_linux_aarch64` | — |
+| armv7l / armv6l | `yt-dlp` (taşınabilir) | `python3` |
 
 ---
 
