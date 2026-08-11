@@ -26,7 +26,8 @@ jobs:
       - name: Analyze
         shell: pwsh
         run: |
-          $results = Invoke-ScriptAnalyzer -Path YoutubeIndirici.ps1 -Severity Error,Warning
+          $results = Invoke-ScriptAnalyzer -Path YoutubeIndirici.ps1 `
+            -Settings PSScriptAnalyzerSettings.psd1 -Severity Error,Warning
           if ($results) {
             $results | Format-Table -AutoSize
             exit 1
