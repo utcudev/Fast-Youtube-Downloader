@@ -180,12 +180,35 @@ while ($true) {
     & $ytDlpPath $argsList
     $exitCode = $LASTEXITCODE
 
+    # YouTube bot kontrolu ("Sign in to confirm you're not a bot") durumunda
+    # kurulu tarayicilardan cerez alip tekrar dene.
+    if ($exitCode -ne 0) {
+        $browsers = @(
+            @{ Name = "firefox"; Path = "$env:APPDATA\Mozilla\Firefox" },
+            @{ Name = "edge";    Path = "$env:LOCALAPPDATA\Microsoft\Edge\User Data" },
+            @{ Name = "chrome";  Path = "$env:LOCALAPPDATA\Google\Chrome\User Data" },
+            @{ Name = "brave";   Path = "$env:LOCALAPPDATA\BraveSoftware\Brave-Browser\User Data" }
+        )
+
+        foreach ($b in $browsers) {
+            if (-not (Test-Path $b.Path)) { continue }
+
+            Write-Host "`nYouTube dogrulama istedi. $($b.Name) cerezleriyle tekrar deneniyor..." -ForegroundColor Yellow
+            & $ytDlpPath ($argsList + @("--cookies-from-browser", $b.Name))
+            $exitCode = $LASTEXITCODE
+
+            if ($exitCode -eq 0) { break }
+        }
+    }
+
     if ($exitCode -eq 0) {
         Write-Host "`n[+] İndirme tamamlandı -> $DownloadFolder" -ForegroundColor Green
     } else {
         Write-Host "`n[!] İndirme başarısız (yt-dlp çıkış kodu: $exitCode)." -ForegroundColor Red
         Write-Host "    Bağlantı yanlış olabilir, video erişime kapalı olabilir," -ForegroundColor Yellow
         Write-Host "    ya da yt-dlp güncel değildir. Güncellemek için: .\yt-dlp.exe -U" -ForegroundColor Yellow
+        Write-Host "    YouTube doğrulama istiyorsa tarayıcınızda youtube.com'a giriş yapıp" -ForegroundColor Yellow
+        Write-Host "    tekrar deneyin; betik çerezleri otomatik kullanacaktır." -ForegroundColor Yellow
     }
 
     Write-Host "-----------------------------------------`n" -ForegroundColor Cyan

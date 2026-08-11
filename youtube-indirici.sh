@@ -192,14 +192,42 @@ while true; do
     fi
 
     if "$YTDLP" "${ARGS[@]}"; then
+        OK=1
+    else
+        OK=0
+        code=$?
+    fi
+
+    # YouTube bot kontrolu ("Sign in to confirm you're not a bot") durumunda
+    # kurulu tarayicilardan cerez alip tekrar dene.
+    if [ "$OK" = "0" ]; then
+        for pair in "firefox:$HOME/.mozilla/firefox" \
+                    "chrome:$HOME/.config/google-chrome" \
+                    "chromium:$HOME/.config/chromium" \
+                    "brave:$HOME/.config/BraveSoftware/Brave-Browser"; do
+            name="${pair%%:*}"
+            path="${pair#*:}"
+            [ -d "$path" ] || continue
+
+            echo
+            say "$C_YELLOW" "YouTube doğrulama istedi. $name çerezleriyle tekrar deneniyor..."
+            if "$YTDLP" "${ARGS[@]}" --cookies-from-browser "$name"; then
+                OK=1
+                break
+            fi
+        done
+    fi
+
+    if [ "$OK" = "1" ]; then
         echo
         say "$C_GREEN" "[+] İndirme tamamlandı -> $DOWNLOAD_DIR"
     else
-        code=$?
         echo
         say "$C_RED" "[!] İndirme başarısız (yt-dlp çıkış kodu: $code)."
         say "$C_YELLOW" "    Bağlantı yanlış olabilir, video erişime kapalı olabilir,"
         say "$C_YELLOW" "    ya da yt-dlp güncel değildir. Güncellemek için: $YTDLP -U"
+        say "$C_YELLOW" "    YouTube doğrulama istiyorsa tarayıcınızda youtube.com'a giriş"
+        say "$C_YELLOW" "    yapıp tekrar deneyin; betik çerezleri otomatik kullanacaktır."
     fi
 
     printf '%s\n\n' "${C_CYAN}-----------------------------------------${C_RESET}"
