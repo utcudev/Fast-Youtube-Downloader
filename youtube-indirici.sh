@@ -6,7 +6,7 @@
 
 set -uo pipefail
 
-SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]:-$0}")" 2>/dev/null && pwd || echo "$PWD")"
 
 # --- Renkler (terminal desteklemiyorsa bos birak) ---------------------------
 
@@ -19,6 +19,19 @@ fi
 
 say()  { printf '%s%s%s\n' "$1" "$2" "$C_RESET"; }
 fail() { say "$C_RED" "$1"; exit 1; }
+
+# Betik kullaniciya soru soruyor; boru hattindan calistirilirsa
+# (curl ... | bash) standart girdi betigin kendisi olur ve sorular bozulur.
+if [ ! -t 0 ]; then
+    say "$C_RED" "Bu betik etkilesimlidir, boru hattiyla calistirilamaz."
+    say "$C_YELLOW" "Once indirin, sonra calistirin:"
+    echo
+    echo "  curl -fsSL https://raw.githubusercontent.com/utcudev/Fast-Youtube-Downloader/main/youtube-indirici.sh -o youtube-indirici.sh"
+    echo "  chmod +x youtube-indirici.sh"
+    echo "  ./youtube-indirici.sh"
+    echo
+    exit 1
+fi
 
 printf '%s\n' "${C_CYAN}=========================================${C_RESET}"
 printf '%s\n' "${C_CYAN}       Youtube MP3/MP4 Indirici          ${C_RESET}"
