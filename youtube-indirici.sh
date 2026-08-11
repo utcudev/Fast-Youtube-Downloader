@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 #
-# Youtube MP3/MP4 Indirici - Linux surumu
-# utcudev tarafindan hazirlanmistir - github.com/utcudev
+# YouTube MP3/MP4 İndirici - Linux sürümü
+# utcudev tarafından hazırlanmıştır - github.com/utcudev
 #
 
 set -uo pipefail
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]:-$0}")" 2>/dev/null && pwd || echo "$PWD")"
 
-# --- Renkler (terminal desteklemiyorsa bos birak) ---------------------------
+# --- Renkler (terminal desteklemiyorsa boş bırak) ---------------------------
 
 if [ -t 1 ] && command -v tput >/dev/null 2>&1 && [ "$(tput colors 2>/dev/null || echo 0)" -ge 8 ]; then
     C_CYAN=$(tput setaf 6); C_GREEN=$(tput setaf 2); C_YELLOW=$(tput setaf 3)
@@ -20,11 +20,11 @@ fi
 say()  { printf '%s%s%s\n' "$1" "$2" "$C_RESET"; }
 fail() { say "$C_RED" "$1"; exit 1; }
 
-# Betik kullaniciya soru soruyor; boru hattindan calistirilirsa
-# (curl ... | bash) standart girdi betigin kendisi olur ve sorular bozulur.
+# Betik kullanıcıya soru soruyor; boru hattından çalıştırılırsa
+# (curl ... | bash) standart girdi betiğin kendisi olur ve sorular bozulur.
 if [ ! -t 0 ]; then
-    say "$C_RED" "Bu betik etkilesimlidir, boru hattiyla calistirilamaz."
-    say "$C_YELLOW" "Once indirin, sonra calistirin:"
+    say "$C_RED" "Bu betik etkileşimlidir, boru hattıyla çalıştırılamaz."
+    say "$C_YELLOW" "Önce indirin, sonra çalıştırın:"
     echo
     echo "  curl -fsSL https://raw.githubusercontent.com/utcudev/Fast-Youtube-Downloader/main/youtube-indirici.sh -o youtube-indirici.sh"
     echo "  chmod +x youtube-indirici.sh"
@@ -34,14 +34,14 @@ if [ ! -t 0 ]; then
 fi
 
 printf '%s\n' "${C_CYAN}=========================================${C_RESET}"
-printf '%s\n' "${C_CYAN}       Youtube MP3/MP4 Indirici          ${C_RESET}"
+printf '%s\n' "${C_CYAN}       YouTube MP3/MP4 İndirici          ${C_RESET}"
 printf '%s\n' "${C_CYAN}=========================================${C_RESET}"
-printf '%s\n' "${C_DIM}   utcudev tarafindan hazirlanmistir     ${C_RESET}"
+printf '%s\n' "${C_DIM}   utcudev tarafından hazırlanmıştır     ${C_RESET}"
 printf '%s\n' "${C_DIM}   github.com/utcudev                    ${C_RESET}"
 printf '%s\n' "${C_CYAN}=========================================${C_RESET}"
 echo
 
-# --- Paket yoneticisi ipucu -------------------------------------------------
+# --- Paket yöneticisi ipucu -------------------------------------------------
 
 install_hint() {
     local pkg="$1"
@@ -50,11 +50,11 @@ install_hint() {
     elif command -v pacman >/dev/null 2>&1; then echo "sudo pacman -S $pkg"
     elif command -v zypper >/dev/null 2>&1; then echo "sudo zypper install $pkg"
     elif command -v apk    >/dev/null 2>&1; then echo "sudo apk add $pkg"
-    else echo "paket yoneticinizle '$pkg' kurun"
+    else echo "paket yöneticinizle '$pkg' kurun"
     fi
 }
 
-# --- Hedef klasor -----------------------------------------------------------
+# --- Hedef klasör -----------------------------------------------------------
 
 if command -v xdg-user-dir >/dev/null 2>&1; then
     DEFAULT_DIR="$(xdg-user-dir DESKTOP 2>/dev/null || true)"
@@ -63,26 +63,26 @@ fi
 [ -d "$DEFAULT_DIR" ] || DEFAULT_DIR="$HOME/Downloads"
 [ -d "$DEFAULT_DIR" ] || DEFAULT_DIR="$HOME"
 
-read -r -p "1) Nereye kaydedilecek? (bos birakirsaniz: $DEFAULT_DIR) " DOWNLOAD_DIR
+read -r -p "1) Nereye kaydedilecek? (boş bırakırsanız: $DEFAULT_DIR) " DOWNLOAD_DIR
 DOWNLOAD_DIR="${DOWNLOAD_DIR:-$DEFAULT_DIR}"
 DOWNLOAD_DIR="${DOWNLOAD_DIR/#\~/$HOME}"
 
 if [ ! -d "$DOWNLOAD_DIR" ]; then
-    say "$C_YELLOW" "Klasor bulunamadi, olusturuluyor..."
-    mkdir -p "$DOWNLOAD_DIR" || fail "Klasor olusturulamadi: $DOWNLOAD_DIR"
+    say "$C_YELLOW" "Klasör bulunamadı, oluşturuluyor..."
+    mkdir -p "$DOWNLOAD_DIR" || fail "Klasör oluşturulamadı: $DOWNLOAD_DIR"
 fi
 
-[ -w "$DOWNLOAD_DIR" ] || fail "Bu klasore yazma izniniz yok: $DOWNLOAD_DIR"
+[ -w "$DOWNLOAD_DIR" ] || fail "Bu klasöre yazma izniniz yok: $DOWNLOAD_DIR"
 
 # --- Format -----------------------------------------------------------------
 
 FORMAT=""
 while [ "$FORMAT" != "1" ] && [ "$FORMAT" != "2" ]; do
     echo
-    say "$C_GREEN" "Format secin:"
+    say "$C_GREEN" "Format seçin:"
     echo " 1) MP3 (Sadece Ses)"
     echo " 2) MP4 (Video)"
-    read -r -p "Seciminiz (1 veya 2): " FORMAT
+    read -r -p "Seçiminiz (1 veya 2): " FORMAT
 done
 
 # --- yt-dlp -----------------------------------------------------------------
@@ -96,10 +96,10 @@ else
         x86_64|amd64)  ASSET="yt-dlp_linux" ;;
         aarch64|arm64) ASSET="yt-dlp_linux_aarch64" ;;
         armv7l|armv6l|arm)
-            # 32-bit ARM icin bagimsiz ikili yayinlanmiyor;
-            # python3 gerektiren tasinabilir surumu kullaniyoruz.
+            # 32-bit ARM için bağımsız ikili yayınlanmıyor;
+            # python3 gerektiren taşınabilir sürümü kullanıyoruz.
             if ! command -v python3 >/dev/null 2>&1; then
-                fail "32-bit ARM icin python3 gerekli. Kurun: $(install_hint python3)"
+                fail "32-bit ARM için python3 gerekli. Kurun: $(install_hint python3)"
             fi
             ASSET="yt-dlp"
             ;;
@@ -107,23 +107,23 @@ else
     esac
 
     URL="https://github.com/yt-dlp/yt-dlp/releases/latest/download/$ASSET"
-    say "$C_YELLOW" "yt-dlp bulunamadi, indiriliyor (sadece ilk seferde)..."
+    say "$C_YELLOW" "yt-dlp bulunamadı, indiriliyor (sadece ilk seferde)..."
 
     if command -v curl >/dev/null 2>&1; then
         curl -fL --progress-bar -o "$SCRIPT_DIR/yt-dlp" "$URL" \
-            || fail "Indirme basarisiz. Alternatif: $(install_hint yt-dlp)"
+            || fail "İndirme başarısız. Alternatif: $(install_hint yt-dlp)"
     elif command -v wget >/dev/null 2>&1; then
         wget -q --show-progress -O "$SCRIPT_DIR/yt-dlp" "$URL" \
-            || fail "Indirme basarisiz. Alternatif: $(install_hint yt-dlp)"
+            || fail "İndirme başarısız. Alternatif: $(install_hint yt-dlp)"
     else
         fail "curl veya wget gerekli. Alternatif: $(install_hint yt-dlp)"
     fi
 
-    chmod +x "$SCRIPT_DIR/yt-dlp" || fail "yt-dlp calistirilabilir yapilamadi."
+    chmod +x "$SCRIPT_DIR/yt-dlp" || fail "yt-dlp çalıştırılabilir yapılamadı."
     YTDLP="$SCRIPT_DIR/yt-dlp"
 fi
 
-# --- ffmpeg (yalnizca MP3 icin) ---------------------------------------------
+# --- ffmpeg -----------------------------------------------------------------
 
 if command -v ffmpeg >/dev/null 2>&1; then
     HAS_FFMPEG=1
@@ -132,47 +132,51 @@ else
 fi
 
 if [ "$FORMAT" = "1" ] && [ "$HAS_FFMPEG" = "0" ]; then
-    say "$C_RED" "MP3'e donusturmek icin ffmpeg gerekli ama kurulu degil."
-    say "$C_YELLOW" "Kurmak icin:  $(install_hint ffmpeg)"
+    say "$C_RED" "MP3'e dönüştürmek için ffmpeg gerekli ama kurulu değil."
+    say "$C_YELLOW" "Kurmak için:  $(install_hint ffmpeg)"
     exit 1
 fi
 
 if [ "$FORMAT" = "2" ] && [ "$HAS_FFMPEG" = "0" ]; then
-    say "$C_YELLOW" "ffmpeg bulunamadi. Video ve ses akislari birlestirilemeyecegi icin"
-    say "$C_YELLOW" "tek parca halindeki en iyi MP4 indirilecek (kalite biraz dusuk olabilir)."
-    say "$C_YELLOW" "Tam kalite icin:  $(install_hint ffmpeg)"
+    say "$C_YELLOW" "ffmpeg bulunamadı. Video ve ses akışları birleştirilemeyeceği için"
+    say "$C_YELLOW" "tek parça hâlindeki en iyi MP4 indirilecek (kalite biraz düşük olabilir)."
+    say "$C_YELLOW" "Tam kalite için:  $(install_hint ffmpeg)"
 fi
 
-# --- Indirme dongusu --------------------------------------------------------
+# --- İndirme döngüsü --------------------------------------------------------
 
 if [ "$FORMAT" = "1" ]; then EXT="mp3"; else EXT="mp4"; fi
 
 echo
 printf '%s\n' "${C_GREEN}=========================================${C_RESET}"
-printf '%s\n' "${C_GREEN}  KURULUM TAMAMLANDI - INDIRMEYE HAZIR   ${C_RESET}"
+printf '%s\n' "${C_GREEN}  KURULUM TAMAMLANDI - İNDİRMEYE HAZIR   ${C_RESET}"
 printf '%s\n' "${C_GREEN}=========================================${C_RESET}"
-say "$C_YELLOW" "Sarki adi yazabilir veya dogrudan bag (link) yapistirabilirsiniz."
-say "$C_YELLOW" "Cikmak icin bos Enter'a basin ya da 'q' yazin."
+say "$C_YELLOW" "Şarkı adı yazabilir veya doğrudan bağlantı yapıştırabilirsiniz."
+say "$C_YELLOW" "Çıkmak için 'q' yazıp Enter'a basın."
 echo
 
 while true; do
-    read -r -p "Indirmek istediginiz muzigin/videonun adi veya bagi: " QUERY
+    read -r -p "İndirmek istediğiniz müziğin/videonun adı veya bağlantısı: " QUERY
 
     QUERY="$(printf '%s' "$QUERY" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-
     QUERY_LOWER="$(printf '%s' "$QUERY" | tr '[:upper:]' '[:lower:]')"
 
-    if [ -z "$QUERY" ] || [ "$QUERY_LOWER" = "q" ]; then
-        say "$C_YELLOW" "Script sonlandiriliyor, iyi gunler!"
+    if [ -z "$QUERY" ]; then
+        say "$C_DIM" "Bir şey yazmadınız. Çıkmak için 'q' yazın."
+        continue
+    fi
+
+    if [ "$QUERY_LOWER" = "q" ]; then
+        say "$C_YELLOW" "Betik sonlandırılıyor, iyi günler!"
         break
     fi
 
     if [[ "$QUERY" =~ ^https?:// ]]; then
         TARGET="$QUERY"
-        say "$C_CYAN" "Indiriliyor: $TARGET ($EXT)..."
+        say "$C_CYAN" "İndiriliyor: $TARGET ($EXT)..."
     else
         TARGET="ytsearch1:$QUERY"
-        say "$C_CYAN" "Araniyor ve indiriliyor: '$QUERY' ($EXT)..."
+        say "$C_CYAN" "Aranıyor ve indiriliyor: '$QUERY' ($EXT)..."
     fi
 
     ARGS=( "$TARGET" --no-playlist --no-overwrites
@@ -183,19 +187,19 @@ while true; do
     elif [ "$HAS_FFMPEG" = "1" ]; then
         ARGS+=( -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best" )
     else
-        # Birlestirici yok - tek dosyalik formatlarla yetin
+        # Birleştirici yok - tek dosyalık formatlarla yetin
         ARGS+=( -f "best[ext=mp4]/best" )
     fi
 
     if "$YTDLP" "${ARGS[@]}"; then
         echo
-        say "$C_GREEN" "[+] Indirme tamamlandi -> $DOWNLOAD_DIR"
+        say "$C_GREEN" "[+] İndirme tamamlandı -> $DOWNLOAD_DIR"
     else
         code=$?
         echo
-        say "$C_RED" "[!] Indirme basarisiz (yt-dlp cikis kodu: $code)."
-        say "$C_YELLOW" "    Bag yanlis olabilir, video erisime kapali olabilir,"
-        say "$C_YELLOW" "    ya da yt-dlp guncel degildir. Guncellemek icin: $YTDLP -U"
+        say "$C_RED" "[!] İndirme başarısız (yt-dlp çıkış kodu: $code)."
+        say "$C_YELLOW" "    Bağlantı yanlış olabilir, video erişime kapalı olabilir,"
+        say "$C_YELLOW" "    ya da yt-dlp güncel değildir. Güncellemek için: $YTDLP -U"
     fi
 
     printf '%s\n\n' "${C_CYAN}-----------------------------------------${C_RESET}"
