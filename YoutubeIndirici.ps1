@@ -12,7 +12,9 @@ $ErrorActionPreference = "Stop"
 try {
     [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
     $OutputEncoding = [System.Text.Encoding]::UTF8
-} catch { }
+} catch {
+    Write-Verbose "Konsol kodlaması UTF-8 yapılamadı: $($_.Exception.Message)"
+}
 
 Write-Host "=========================================" -ForegroundColor Cyan
 Write-Host "       YouTube MP3/MP4 İndirici          " -ForegroundColor Cyan
