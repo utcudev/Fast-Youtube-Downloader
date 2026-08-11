@@ -8,6 +8,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/PowerShell-5391FE?style=for-the-badge&logo=powershell&logoColor=white" alt="PowerShell">
   <img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Windows">
+  <img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black" alt="Linux">
   <img src="https://img.shields.io/badge/yt--dlp-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="yt-dlp">
   <img src="https://img.shields.io/badge/License-MIT-22C55E?style=for-the-badge" alt="MIT License">
 </p>
@@ -28,11 +29,23 @@
 
 ## Kullanım
 
-1. `YoutubeIndirici.bat` dosyasına çift tıkla
-2. Kayıt klasörünü yaz (boş Enter = masaüstü)
-3. Format seç: `1` = MP3, `2` = MP4
-4. Şarkı adı ya da bağ yaz, Enter
-5. Çıkmak için `q` veya boş Enter
+### Windows
+
+`YoutubeIndirici.bat` dosyasına çift tıkla. Hepsi bu.
+
+### Linux / macOS
+
+```bash
+chmod +x youtube-indirici.sh
+./youtube-indirici.sh
+```
+
+### Sonrası ikisinde de aynı
+
+1. Kayıt klasörünü yaz (boş Enter = masaüstü)
+2. Format seç: `1` = MP3, `2` = MP4
+3. Şarkı adı ya da bağ yaz, Enter
+4. Çıkmak için `q` veya boş Enter
 
 ```
 =========================================
@@ -69,11 +82,15 @@ Sonraki çalıştırmalarda bu adım atlanır.
 
 ## Gereksinimler
 
-- Windows 10 / 11
-- PowerShell 5.1 (Windows'ta hazır gelir) veya PowerShell 7+
-- İnternet bağlantısı
+**Windows** — Windows 10/11 ve PowerShell 5.1 (sistemle birlikte gelir). `.bat` dosyası betiği `-ExecutionPolicy Bypass` ile çalıştırır, ayrı izin ayarı gerekmez.
 
-`.bat` dosyası betiği `-ExecutionPolicy Bypass` ile çalıştırır, ayrı bir izin ayarı gerekmez.
+**Linux / macOS** — bash, ve `curl` ya da `wget`. MP3 indirmek için `ffmpeg` sistemde kurulu olmalı:
+
+```bash
+sudo apt install ffmpeg
+```
+
+Betik hangi paket yöneticisini kullandığını algılar ve doğru komutu söyler (apt / dnf / pacman / zypper / apk / brew). yt-dlp kurulu değilse mimarine uygun ikiliyi kendisi indirir — x86_64, aarch64 ve armv7l destekli.
 
 ---
 
