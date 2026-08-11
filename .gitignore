@@ -1,0 +1,12 @@
+# Otomatik indirilen araclar - repoda tutulmaz
+yt-dlp.exe
+ffmpeg.exe
+ffmpeg.zip
+ffmpeg_extracted/
+
+# Indirilen medya
+*.mp3
+*.mp4
+*.m4a
+*.webm
+*.part
